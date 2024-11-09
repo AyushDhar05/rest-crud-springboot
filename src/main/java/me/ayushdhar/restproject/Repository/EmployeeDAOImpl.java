@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import me.ayushdhar.restproject.Entities.Employee;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,10 +17,33 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    @Transactional
     public List<Employee> getEmployees() {
         String jpqlQuery = "Select e from Employee e";
         TypedQuery<Employee> query = em.createQuery(jpqlQuery, Employee.class);
         return query.getResultList();
+    }
+
+    @Override
+    public Employee getEmployee(int id) {
+        return em.find(Employee.class, id);
+    }
+
+    @Override
+    public Employee addEmployee(Employee employee) {
+//        em.persist(employee);
+        return em.merge(employee);
+    }
+
+
+//    @Override
+//    public void updateEmployee(int id) {
+//        Employee emp = em.find(Employee.class, id);
+//
+//    }
+
+    @Override
+    public void deleteEmployee(int id) {
+        Employee emp = em.find(Employee.class, id);
+        em.remove(emp);
     }
 }
